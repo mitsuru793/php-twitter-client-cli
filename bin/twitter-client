@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use TwitterClientCli\ConsoleCommand\ShowCommand;
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+$application = new Application();
+
+$application->add(new ShowCommand());
+
+$application->run();

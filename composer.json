@@ -1,0 +1,50 @@
+{
+    "name": "mitsuru793/list-project-sorting-by-modified",
+    "description": "Twitter client for terminal in PHP.",
+    "type": "library",
+    "homepage": "https://github.com/mitsuru793/php-twitter-client-cli",
+    "license": "MIT",
+    "keywords": [
+        "twitter",
+        "tweet",
+        "client",
+        "cli"
+    ],
+    "authors": [
+        {
+            "name": "mitsuru793",
+            "email": "mitsuru793@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "bin": [
+        "bin/twitter-client"
+    ],
+    "scripts": {
+        "test": "phpunit --color=always",
+        "analyze": "phpstan analyze ./src"
+    },
+    "require": {
+        "php": ">=7.4",
+        "illuminate/collections": "^8.18",
+        "abraham/twitteroauth": "^2.0",
+        "vlucas/phpdotenv": "^5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/var-dumper": "^5.2",
+        "phpstan/phpstan": "^0.12.59",
+        "symfony/console": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "TwitterClientCli\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UnitTest\\": "tests/unit/",
+            "TestHelper\\": "tests/helper/"
+        }
+    }
+}
