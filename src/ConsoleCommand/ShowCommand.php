@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TwitterClientCli\ConsoleDumper;
+use TwitterClientCli\TwitterClientFactory;
 
 final class ShowCommand extends Command
 {
@@ -18,10 +19,13 @@ final class ShowCommand extends Command
 
     private ConsoleDumper $dumper;
 
+    private TwitterOAuth $twitter;
+
     public function __construct(string $name = null)
     {
         parent::__construct($name);
         $this->dumper = new ConsoleDumper();
+        $this->twitter = (new TwitterClientFactory())->makeFromEnv();
     }
 
     protected function configure()
@@ -42,14 +46,8 @@ final class ShowCommand extends Command
             throw new \InvalidArgumentException('Not found tweet id in argument.');
         }
 
-        $connection = new TwitterOAuth(
-            $_ENV['TWITTER_CONSUMER_KEY'],
-            $_ENV['TWITTER_CONSUMER_SECRET'],
-            $_ENV['TWITTER_ACCESS_TOKEN'],
-            $_ENV['TWITTER_ACCESS_TOKEN_SECRET']
-        );
         $endpoint = sprintf('statuses/show/%d', $tweetId);
-        $content = $connection->get($endpoint);
+        $content = $this->twitter->get($endpoint);
         $json = $this->dumper->jsonPretty($content);
         $output->writeln($json);
         return Command::SUCCESS;
