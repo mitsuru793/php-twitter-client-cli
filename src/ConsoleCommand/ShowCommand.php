@@ -8,12 +8,21 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TwitterClientCli\ConsoleDumper;
 
 final class ShowCommand extends Command
 {
     protected static $defaultName = 'show';
 
     private const TWEET_RE = '~([0-9a-zA-Z_]+)/status(?:es)?/(\d+)~';
+
+    private ConsoleDumper $dumper;
+
+    public function __construct(string $name = null)
+    {
+        parent::__construct($name);
+        $this->dumper = new ConsoleDumper();
+    }
 
     protected function configure()
     {
@@ -22,6 +31,9 @@ final class ShowCommand extends Command
             ->addArgument('url', InputArgument::REQUIRED, 'twitter url');
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $tweetUrl = $input->getArgument('url');
@@ -38,7 +50,7 @@ final class ShowCommand extends Command
         );
         $endpoint = sprintf('statuses/show/%d', $tweetId);
         $content = $connection->get($endpoint);
-        $json = json_encode($content, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+        $json = $this->dumper->jsonPretty($content);
         $output->writeln($json);
         return Command::SUCCESS;
     }
